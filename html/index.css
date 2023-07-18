@@ -1,0 +1,20 @@
+.board {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.line {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.square {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 10em;
+    height: 10em;
+}
