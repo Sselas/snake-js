@@ -1,8 +1,9 @@
 .board {
-    display: flex;
+    display: inline-block;
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    border: 5px solid;
 }
 
 .line {
@@ -12,9 +13,18 @@
 }
 
 .square {
+    box-sizing: border-box;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 10em;
-    height: 10em;
+    border: 1px solid;
+    width: 1.6em;
+    height: 1.6em;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }

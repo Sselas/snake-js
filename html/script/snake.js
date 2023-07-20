@@ -1,34 +1,15 @@
-const boardSize = {
-    'width' : 10, 
-    'height' : 10
-}
-const initValueArray = {
-    'speed':1, 
-    'startingPos':(boardSize.height+1)*boardSize.width/2, 
-    'foodStockInit':0
-}
-const dir = {
-    'up':-boardSize.width, 
-    'down':boardSize.width, 
-    'left':-1, 
-    'right':1, 
-    'none':0
-}
-
 export function initSnake(dirInit, initValue = initValueArray){
-    return {speed : initValue.speed,
-            body : [
-                {   dirFromPrevious: dirInit,
-                    pos: initValue.startingPos}
-            ],
-            dirCurrent : dirInit,
-            foodStock : initValue.foodStockInit,
-    };
+    return [
+        {
+            dirFromPrevious: dirInit,
+            pos: initValue.startingPos
+        },
+    ];
 }
 
 //PRECOND: snakeBody is already initialized, ie non empty
 //         '''tail.pos + dir[tail.dirFromPrevious]''' is an available position
-export function increaseSnakeSize(snakeBody){
+export function increaseSnakeSize(snakeBody, dir){
     const tail = snakeBody[snakeBody.length-1];
     return [
         ...snakeBody,
@@ -39,7 +20,7 @@ export function increaseSnakeSize(snakeBody){
     ];
 }
 
-export function move(snakeBody, dirCurrent, board = boardSize) {
+export function move(snakeBody, dirCurrent, board, dir) {
     let snakeCopy = [...snakeBody];
     snakeCopy.unshift({
         dirFromPrevious: dirCurrent,
@@ -57,4 +38,37 @@ export function move(snakeBody, dirCurrent, board = boardSize) {
     }
     snakeCopy.pop();
     return snakeCopy;
+}
+
+export function isCoordOnSnake(coord, snakeBody) {
+    for (let i=0; i<snakeBody.length; i++) {
+        if (snakeBody[i].pos === coord) {
+            return true;
+        }
+    }
+    return false;
+}
+
+export function isHeadOnSnake(snakeBody) {
+    for (let i=1; i<snakeBody.length; i++) {
+        if (snakeBody[i].pos === snakeBody[0].pos) {
+            return true;
+        }
+    }
+    return false;
+}
+
+export function isHeadOnPos(coord, snakeBody) {
+    return (snakeBody[0].pos === coord);
+}
+
+export function spawnFood(snakeBody,board) {
+    let rand = Math.floor(Math.random()*board.width*board.height);
+    if (snakeBody.length === board.width*board.height) {
+        return -1;
+    }
+    while (isCoordOnSnake(rand,snakeBody)) {
+        rand = (rand+1)%(board.width*board.height);
+    }
+    return rand;
 }
