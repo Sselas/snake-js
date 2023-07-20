@@ -26,11 +26,11 @@ export function move(snakeBody, dirCurrent, board, dir) {
         dirFromPrevious: dirCurrent,
         pos: -1,
     });
-    if (dirCurrent === 'left' || dirCurrent === 'right') {
+    if (dirCurrent === 'ArrowLeft' || dirCurrent === 'ArrowRight') {
         
         snakeCopy[0].pos = snakeCopy[1].pos + dir[dirCurrent] + (Math.trunc(snakeCopy[1].pos/board.width) - Math.trunc((snakeCopy[1].pos + dir[dirCurrent])/board.width))*board.width;
     }
-    else if (dirCurrent === 'up' || dirCurrent === 'down') {
+    else if (dirCurrent === 'ArrowUp' || dirCurrent === 'ArrowDown') {
         snakeCopy[0].pos = (snakeCopy[1].pos + dir[dirCurrent] + board.width*board.height) % (board.width*board.height);
     }
     else {

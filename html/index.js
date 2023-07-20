@@ -1,8 +1,8 @@
 import * as sn from "./script/snake.js"
 
 const boardSize = {
-    'width' : 31, 
-    'height' : 25
+    'width' : 10, 
+    'height' : 10
 };
 
 let initValue = {
@@ -12,11 +12,11 @@ let initValue = {
 };
 
 const dir = {
-    'up':-boardSize.width, 
-    'down':boardSize.width, 
-    'left':-1, 
-    'right':1, 
-    'none':0
+    "ArrowUp":-boardSize.width, 
+    "ArrowDown":boardSize.width, 
+    "ArrowLeft":-1, 
+    "ArrowRight":1, 
+    "None":0
 };
 
 
@@ -40,6 +40,7 @@ function printSnake(snakeBody, foodPos) {
 }
 
 let snakeBody = [];
+let dirPrevious = "None"
 let dirCurrent = "";
 let gameStatus;
 let foodStock;
@@ -48,9 +49,10 @@ let speed;
 
 function reset() {
     gameStatus = Boolean(false);
-    snakeBody = sn.initSnake("right",initValue,dir);
+    snakeBody = sn.initSnake("None",initValue,dir);
     foodStock = 4;
     speed = 25;
+    dirPrevious = "None";
     foodPos = sn.spawnFood(snakeBody,boardSize);
     initBoard();
     printSnake(snakeBody,foodPos);
@@ -60,7 +62,9 @@ reset();
 
 setInterval(function (){
     if (gameStatus){
+        console.log(snakeBody);
         snakeBody = sn.move(snakeBody, dirCurrent, boardSize, dir);
+        dirPrevious = dirCurrent;
         if (foodStock > 0) {
             snakeBody = sn.increaseSnakeSize(snakeBody,dir);
             foodStock--;
@@ -78,31 +82,14 @@ setInterval(function (){
 },400-10*speed);
 
 addEventListener("keydown", (event) => {
-    if (event.key === "ArrowLeft") {
-        if (dirCurrent!="right"){
-            dirCurrent = "left";
-            gameStatus = Boolean(true);
-        }
-    }
-    if (event.key === "ArrowUp") {
-        if (dirCurrent!="down"){
-            dirCurrent = "up";
-            gameStatus = Boolean(true);
-        }
-    }
-    if (event.key === "ArrowRight") {
-        if (dirCurrent!="left"){
-            dirCurrent = "right";
-            gameStatus = Boolean(true);
-        }
-    }
-    if (event.key === "ArrowDown") {
-        if (dirCurrent!="up"){
-            dirCurrent = "down";
+    if (event.key === "ArrowLeft" || event.key === "ArrowUp" || event.key === "ArrowRight" || event.key === "ArrowDown") {
+        if (dir[dirPrevious]!=-dir[event.key]){
+            dirCurrent = event.key;
             gameStatus = Boolean(true);
         }
     }
     if (event.key === "Enter") {
+        //gameStatus = false;
         reset();
     }
 });
