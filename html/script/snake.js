@@ -20,24 +20,25 @@ export function increaseSnakeSize(snakeBody, dir){
     ];
 }
 
-export function move(snakeBody, dirCurrent, board, dir) {
+export function move(snakeBody, dirCurrent, dir) {
     let snakeCopy = [...snakeBody];
     snakeCopy.unshift({
         dirFromPrevious: dirCurrent,
         pos: -1,
     });
-    if (dirCurrent === 'ArrowLeft' || dirCurrent === 'ArrowRight') {
-        
-        snakeCopy[0].pos = snakeCopy[1].pos + dir[dirCurrent] + (Math.trunc(snakeCopy[1].pos/board.width) - Math.trunc((snakeCopy[1].pos + dir[dirCurrent])/board.width))*board.width;
-    }
-    else if (dirCurrent === 'ArrowUp' || dirCurrent === 'ArrowDown') {
-        snakeCopy[0].pos = (snakeCopy[1].pos + dir[dirCurrent] + board.width*board.height) % (board.width*board.height);
-    }
-    else {
-        throw new Error("Non recognized direction : " + dirCurrent);
-    }
+    snakeCopy[0].pos = snakeCopy[1].pos + dir[dirCurrent];
     snakeCopy.pop();
     return snakeCopy;
+}
+
+export function isOutOfBound(snakeBody, board, dirCurrent) {
+    if (dirCurrent === 'ArrowLeft' || dirCurrent === 'ArrowRight') {
+        return (Math.trunc(snakeBody[0].pos/board.width) !== Math.trunc(snakeBody[1].pos/board.width));
+    }
+    else if (dirCurrent === 'ArrowUp' || dirCurrent === 'ArrowDown') {
+        return ((snakeBody[0].pos < 0) || (snakeBody[0].pos) >= board.width * board.height);
+    }
+    return false;
 }
 
 export function isCoordOnSnake(coord, snakeBody) {

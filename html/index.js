@@ -1,13 +1,13 @@
 import * as sn from "./script/snake.js"
 
 const boardSize = {
-    'width' : 10, 
-    'height' : 10
+    'width' : 15, 
+    'height' : 15
 };
 
 let initValue = {
     'speed':1, 
-    'startingPos': Math.floor(boardSize.height*boardSize.width/2), 
+    'startingPos': Math.floor((boardSize.height*boardSize.width)/2), 
     'foodStockInit':10
 };
 
@@ -33,9 +33,9 @@ function initBoard() {
 }
 
 function printSnake(snakeBody, foodPos) {
-    document.getElementsByClassName("square")[foodPos].innerHTML = "F";
+    document.getElementsByClassName("square")[foodPos].style.backgroundColor = "red";
     for (let i = 0; i<snakeBody.length; i++) {
-        document.getElementsByClassName("square")[snakeBody[i].pos].innerHTML = "S";
+        document.getElementsByClassName("square")[snakeBody[i].pos].style.backgroundColor = "green";
     }
 }
 
@@ -51,7 +51,7 @@ function reset() {
     gameStatus = Boolean(false);
     snakeBody = sn.initSnake("None",initValue,dir);
     foodStock = 4;
-    speed = 25;
+    speed = document.getElementById("speedrange").valueAsNumber;
     dirPrevious = "None";
     foodPos = sn.spawnFood(snakeBody,boardSize);
     initBoard();
@@ -60,10 +60,10 @@ function reset() {
 
 reset();
 
-setInterval(function (){
+let loop = function (){
+    speed = document.getElementById("speedrange").valueAsNumber;
     if (gameStatus){
-        console.log(snakeBody);
-        snakeBody = sn.move(snakeBody, dirCurrent, boardSize, dir);
+        snakeBody = sn.move(snakeBody, dirCurrent, dir);
         dirPrevious = dirCurrent;
         if (foodStock > 0) {
             snakeBody = sn.increaseSnakeSize(snakeBody,dir);
@@ -73,13 +73,16 @@ setInterval(function (){
             foodPos = sn.spawnFood(snakeBody,boardSize);
             foodStock ++;
         }
-        if (sn.isHeadOnSnake(snakeBody)) {
+        if (sn.isHeadOnSnake(snakeBody) || sn.isOutOfBound(snakeBody, boardSize, dirCurrent)) {
             reset();
         }
         initBoard();
         printSnake(snakeBody, foodPos);
     }
-},400-10*speed);
+    setTimeout(loop, 400 - speed)
+}
+
+setTimeout(loop, 1)
 
 addEventListener("keydown", (event) => {
     if (event.key === "ArrowLeft" || event.key === "ArrowUp" || event.key === "ArrowRight" || event.key === "ArrowDown") {
@@ -93,3 +96,6 @@ addEventListener("keydown", (event) => {
         reset();
     }
 });
+
+// document.getElementsByClassName("board")[0].style.backgroundImage = "url('./files/matback.jpg')";
+// document.getElementsByClassName("board")[0].style.backgroundSize = "100%";
